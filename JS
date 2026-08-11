@@ -1,0 +1,191 @@
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+function AddProject() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    technologies: "",
+    githubLink: "",
+    liveLink: "",
+    image: ""
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const technologiesArray = form.technologies
+        .split(",")
+        .map((technology) => technology.trim())
+        .filter(Boolean);
+
+      await axios.post(
+        "http://localhost:5000/api/projects",
+        {
+          title: form.title,
+          description: form.description,
+          technologies: technologiesArray,
+          githubLink: form.githubLink,
+          liveLink: form.liveLink,
+          image: form.image
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      navigate("/projects");
+
+    } catch (error) {
+      setError(
+        error.response?.data?.message ||
+        "Unable to create project"
+      );
+    }
+  };
+
+  return (
+    <main className="add-project-page">
+
+      <div className="form-container">
+
+        <div className="page-header">
+          <p className="section-label">
+            PROJECT SHOWCASE
+          </p>
+
+          <h1>
+            Add Your Project
+          </h1>
+
+          <p>
+            Share something you built with the
+            Web Development Club.
+          </p>
+        </div>
+
+        {error && (
+          <div className="error">
+            {error}
+          </div>
+        )}
+
+        <form
+          className="project-form"
+          onSubmit={handleSubmit}
+        >
+
+          <label>
+            Project Title
+          </label>
+
+          <input
+            type="text"
+            name="title"
+            placeholder="Portfolio Website"
+            value={form.title}
+            onChange={handleChange}
+            required
+          />
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            name="description"
+            placeholder="Describe your project..."
+            value={form.description}
+            onChange={handleChange}
+            rows="6"
+            required
+          />
+
+          <label>
+            Technologies
+          </label>
+
+          <input
+            type="text"
+            name="technologies"
+            placeholder="React, JavaScript, CSS, HTML"
+            value={form.technologies}
+            onChange={handleChange}
+          />
+
+          <label>
+            GitHub URL
+          </label>
+
+          <input
+            type="url"
+            name="githubLink"
+            placeholder="https://github.com/username/project"
+            value={form.githubLink}
+            onChange={handleChange}
+          />
+
+          <label>
+            Live Demo URL
+          </label>
+
+          <input
+            type="url"
+            name="liveLink"
+            placeholder="https://yourproject.com"
+            value={form.liveLink}
+            onChange={handleChange}
+          />
+
+          <label>
+            Project Image URL
+          </label>
+
+          <input
+            type="url"
+            name="image"
+            placeholder="https://example.com/project.jpg"
+            value={form.image}
+            onChange={handleChange}
+          />
+
+          <button
+            type="submit"
+            className="primary-button full"
+          >
+            Publish Project
+          </button>
+
+        </form>
+
+      </div>
+
+    </main>
+  );
+}
+
+export default AddProject;
