@@ -1,0 +1,34 @@
+web-dev-club/
+│
+├── backend/
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   └── projectController.js
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   ├── models/
+│   │   ├── User.js
+│   │   └── Project.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   └── projectRoutes.js
+│   ├── .env
+│   ├── package.json
+│   └── server.js
+│
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   │   ├── Navbar.jsx
+    │   │   └── ProjectCard.jsx
+    │   ├── pages/
+    │   │   ├── Home.jsx
+    │   │   ├── Login.jsx
+    │   │   ├── Register.jsx
+    │   │   ├── Projects.jsx
+    │   │   └── AddProject.jsx
+    │   ├── App.jsx
+    │   ├── main.jsx
+    │   └── style.css
+    ├── package.json
+    └── index.html
